@@ -35,12 +35,20 @@ function App() {
     }
   };
 
-  const inputRef=useRef(null);
+  const [imageSrc, setImageSrc] = useState(null);
+  const imageRef = useRef(null);
 
-  const handleChange=()=>{
-    inputRef.current.focus();
-  }
-  console.log(inputRef)
+  const handleChange = () => {
+    const file = imageRef.current.files[0];
+    let src = null;
+    if (file) {
+      src = URL.createObjectURL(file);
+    }
+    setImageSrc(src);
+    return () => {
+      URL.revokeObjectURL(src);
+    };
+  };
 
   return (
     <div className="App">
@@ -89,9 +97,12 @@ function App() {
        <h1>3. Simple Form to Upload an Image</h1>
       <div>
         <label>Picture File: </label>
-        <input ref={inputRef} type="file" onChange={handleChange}/>
+        <input ref={imageRef} type="file" onChange={handleChange}/>
         <br/>
-        <img src={inputRef.current} alt=""/>
+        {
+
+          imageSrc && <img src={imageSrc} alt=""/>
+        }
       </div>
     </div>
   );
